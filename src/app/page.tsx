@@ -37,10 +37,10 @@ export default function Home() {
       <div className="container mx-auto px-4 py-8">
         <header className="text-center mb-8">
           <h1 className="text-4xl font-bold tracking-tight mb-2">
-            Perchance Character Generator
+            Artigen
           </h1>
           <p className="text-muted-foreground">
-            Create unique AI-generated characters with various art styles
+            Create stunning AI-generated images with various art styles
           </p>
         </header>
 

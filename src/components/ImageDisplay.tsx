@@ -19,7 +19,7 @@ export function ImageDisplay({ imageUrl, seed }: ImageDisplayProps) {
       const url = window.URL.createObjectURL(blob);
       const link = document.createElement("a");
       link.href = url;
-      link.download = `character-${seed || Date.now()}.png`;
+      link.download = `artigen-${seed || Date.now()}.png`;
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);
@@ -34,7 +34,7 @@ export function ImageDisplay({ imageUrl, seed }: ImageDisplayProps) {
       <Card className="h-full min-h-[400px] flex items-center justify-center bg-muted/50">
         <CardContent>
           <p className="text-muted-foreground text-center">
-            Your generated character will appear here
+            Your generated image will appear here
           </p>
         </CardContent>
       </Card>
@@ -46,7 +46,7 @@ export function ImageDisplay({ imageUrl, seed }: ImageDisplayProps) {
       <CardContent className="p-0 relative">
         <img
           src={imageUrl}
-          alt="Generated character"
+          alt="Generated image"
           className="w-full h-auto"
         />
         <div className="absolute bottom-4 right-4">

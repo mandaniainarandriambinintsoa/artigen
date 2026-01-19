@@ -5,8 +5,8 @@ import "./globals.css";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "Perchance Character Generator",
-  description: "Generate AI characters using Perchance.org",
+  title: "Artigen - AI Image Generator",
+  description: "Generate stunning AI images with various art styles",
 };
 
 export default function RootLayout({

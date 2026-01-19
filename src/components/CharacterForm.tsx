@@ -76,16 +76,16 @@ export function CharacterForm({ onGenerate, isLoading }: CharacterFormProps) {
       <CardHeader>
         <CardTitle className="flex items-center gap-2">
           <Sparkles className="h-5 w-5" />
-          Character Generator
+          Image Generator
         </CardTitle>
       </CardHeader>
       <CardContent>
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="space-y-2">
-            <Label htmlFor="prompt">Character Description</Label>
+            <Label htmlFor="prompt">Image Description</Label>
             <Textarea
               id="prompt"
-              placeholder="Describe your character... (e.g., a warrior with blue eyes and silver armor)"
+              placeholder="Describe your image... (e.g., a sunset over mountains, a futuristic city)"
               value={prompt}
               onChange={(e) => setPrompt(e.target.value)}
               disabled={isLoading}
@@ -137,7 +137,7 @@ export function CharacterForm({ onGenerate, isLoading }: CharacterFormProps) {
             className="w-full"
             disabled={isLoading || !prompt.trim()}
           >
-            {isLoading ? "Generating..." : "Generate Character"}
+            {isLoading ? "Generating..." : "Generate Image"}
           </Button>
         </form>
       </CardContent>

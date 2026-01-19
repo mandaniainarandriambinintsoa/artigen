@@ -1,6 +1,6 @@
-# Perchance WebApp
+# Artigen - AI Image Generator
 
-A Next.js frontend for the Perchance Character Generator API.
+A Next.js webapp for generating AI images with various art styles.
 
 ## Setup
 
@@ -28,19 +28,12 @@ Open [http://localhost:3000](http://localhost:3000) in your browser.
 
 ## Features
 
-- Character generation form with prompt input
-- Style selector with multiple art styles
+- Image generation form with prompt input
+- Style selector with multiple art styles (anime, realistic, fantasy, etc.)
 - Resolution selector (square, portrait, landscape)
 - Negative prompt support
 - Image display with download button
 - Loading state during generation
-
-## Deployment (Vercel)
-
-1. Connect your GitHub repository to Vercel
-2. Set the environment variable:
-   - `NEXT_PUBLIC_API_URL` = your Railway API URL
-3. Deploy
 
 ## Tech Stack
 
@@ -48,3 +41,11 @@ Open [http://localhost:3000](http://localhost:3000) in your browser.
 - TypeScript
 - Tailwind CSS
 - shadcn/ui components
+
+## Deployment
+
+Deploy to Vercel:
+1. Connect your GitHub repository to Vercel
+2. Set the environment variable:
+   - `NEXT_PUBLIC_API_URL` = your API URL
+3. Deploy
