@@ -11,9 +11,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { StyleSelector } from "./StyleSelector";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Sparkles } from "lucide-react";
+import { Sparkles, Cpu } from "lucide-react";
 import { apiClient } from "@/lib/api";
 import { GenerateRequest } from "@/types";
 
@@ -22,20 +21,27 @@ const RESOLUTIONS = [
   { value: "512x768", label: "512x768 (Portrait)" },
   { value: "768x512", label: "768x512 (Landscape)" },
   { value: "768x768", label: "768x768 (Large Square)" },
+  { value: "1024x1024", label: "1024x1024 (HD Square)" },
+  { value: "1024x768", label: "1024x768 (HD Landscape)" },
+  { value: "768x1024", label: "768x1024 (HD Portrait)" },
 ];
 
 const DEFAULT_STYLES = [
-  "anime",
   "realistic",
+  "photorealistic",
+  "cinematic",
+  "portrait",
+  "anime",
   "fantasy",
   "sci-fi",
-  "cartoon",
-  "oil-painting",
-  "watercolor",
-  "pixel-art",
-  "comic-book",
   "3d-render",
 ];
+
+const DEFAULT_MODELS: Record<string, string> = {
+  "flux-realism": "Hyper-realistic (Recommended)",
+  "flux": "High quality general",
+  "turbo": "Fast generation",
+};
 
 interface CharacterFormProps {
   onGenerate: (request: GenerateRequest) => Promise<void>;
@@ -44,18 +50,33 @@ interface CharacterFormProps {
 
 export function CharacterForm({ onGenerate, isLoading }: CharacterFormProps) {
   const [prompt, setPrompt] = useState("");
-  const [style, setStyle] = useState("anime");
-  const [resolution, setResolution] = useState("512x768");
-  const [negativePrompt, setNegativePrompt] = useState("");
+  const [style, setStyle] = useState("realistic");
+  const [resolution, setResolution] = useState("768x768");
+  const [negativePrompt, setNegativePrompt] = useState("cartoon, anime, illustration, drawing, art, painting, sketch, cgi, 3d, render, fake, artificial");
   const [styles, setStyles] = useState<string[]>(DEFAULT_STYLES);
+  const [model, setModel] = useState("flux-realism");
+  const [models, setModels] = useState<Record<string, string>>(DEFAULT_MODELS);
 
   useEffect(() => {
+    // Fetch styles and models from API
     apiClient.getStyles().then((data) => {
       if (data.styles.length > 0) {
         setStyles(data.styles);
       }
     }).catch(() => {
       // Use default styles if API fails
+    });
+
+    apiClient.getModels().then((data) => {
+      if (Object.keys(data.models).length > 0) {
+        // Filter out kontext (img2img only)
+        const filteredModels = Object.fromEntries(
+          Object.entries(data.models).filter(([key]) => key !== "kontext")
+        );
+        setModels(filteredModels);
+      }
+    }).catch(() => {
+      // Use default models if API fails
     });
   }, []);
 
@@ -67,47 +88,78 @@ export function CharacterForm({ onGenerate, isLoading }: CharacterFormProps) {
       prompt: prompt.trim(),
       style,
       resolution,
+      model,
       negative_prompt: negativePrompt.trim() || undefined,
+      enhance: true,
     });
   };
 
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle className="flex items-center gap-2">
-          <Sparkles className="h-5 w-5" />
-          Image Generator
+    <Card className="border-0 bg-card/50 backdrop-blur">
+      <CardHeader className="pb-4">
+        <CardTitle className="flex items-center gap-2 text-lg">
+          <Sparkles className="h-5 w-5 text-primary" />
+          Generate Image
         </CardTitle>
       </CardHeader>
       <CardContent>
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="space-y-2">
-            <Label htmlFor="prompt">Image Description</Label>
+            <Label htmlFor="prompt" className="text-sm font-medium">
+              Describe your image
+            </Label>
             <Textarea
               id="prompt"
-              placeholder="Describe your image... (e.g., a sunset over mountains, a futuristic city)"
+              placeholder="A beautiful sunset over mountains with golden light..."
               value={prompt}
               onChange={(e) => setPrompt(e.target.value)}
               disabled={isLoading}
-              rows={4}
+              rows={3}
+              className="resize-none"
             />
           </div>
 
-          <StyleSelector
-            styles={styles}
-            value={style}
-            onChange={setStyle}
-            disabled={isLoading}
-          />
+          <div className="grid grid-cols-2 gap-3">
+            <div className="space-y-2">
+              <Label className="text-sm font-medium">Style</Label>
+              <Select value={style} onValueChange={setStyle} disabled={isLoading}>
+                <SelectTrigger>
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  {styles.map((s) => (
+                    <SelectItem key={s} value={s} className="capitalize">
+                      {s.replace("-", " ")}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+
+            <div className="space-y-2">
+              <Label className="text-sm font-medium flex items-center gap-1">
+                <Cpu className="h-3 w-3" />
+                Model
+              </Label>
+              <Select value={model} onValueChange={setModel} disabled={isLoading}>
+                <SelectTrigger>
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  {Object.entries(models).map(([key, description]) => (
+                    <SelectItem key={key} value={key}>
+                      {key}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+          </div>
 
           <div className="space-y-2">
-            <Label htmlFor="resolution">Resolution</Label>
-            <Select
-              value={resolution}
-              onValueChange={setResolution}
-              disabled={isLoading}
-            >
-              <SelectTrigger id="resolution">
+            <Label className="text-sm font-medium">Resolution</Label>
+            <Select value={resolution} onValueChange={setResolution} disabled={isLoading}>
+              <SelectTrigger>
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
@@ -121,23 +173,36 @@ export function CharacterForm({ onGenerate, isLoading }: CharacterFormProps) {
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="negative">Negative Prompt (optional)</Label>
+            <Label htmlFor="negative" className="text-sm font-medium">
+              Negative Prompt
+            </Label>
             <Textarea
               id="negative"
-              placeholder="What to avoid... (e.g., blurry, bad quality)"
+              placeholder="Things to avoid..."
               value={negativePrompt}
               onChange={(e) => setNegativePrompt(e.target.value)}
               disabled={isLoading}
               rows={2}
+              className="resize-none text-sm"
             />
           </div>
 
           <Button
             type="submit"
-            className="w-full"
+            className="w-full h-11"
             disabled={isLoading || !prompt.trim()}
           >
-            {isLoading ? "Generating..." : "Generate Image"}
+            {isLoading ? (
+              <span className="flex items-center gap-2">
+                <span className="h-4 w-4 animate-spin rounded-full border-2 border-current border-t-transparent" />
+                Generating...
+              </span>
+            ) : (
+              <span className="flex items-center gap-2">
+                <Sparkles className="h-4 w-4" />
+                Generate Image
+              </span>
+            )}
           </Button>
         </form>
       </CardContent>
