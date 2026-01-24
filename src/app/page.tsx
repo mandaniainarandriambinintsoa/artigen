@@ -67,6 +67,7 @@ export default function Home() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [styles, setStyles] = useState(DEFAULT_STYLES);
   const [models, setModels] = useState(DEFAULT_MODELS);
+  const [queueStatus, setQueueStatus] = useState<string>("");
 
   useEffect(() => {
     apiClient.getStyles().then((data) => {
@@ -97,6 +98,7 @@ export default function Home() {
     if (!prompt.trim()) return;
     setIsLoading(true);
     setError(null);
+    setQueueStatus("Submitting...");
 
     try {
       const request: GenerateRequest = {
@@ -106,10 +108,13 @@ export default function Home() {
         model,
         enhance: true,
       };
-      const response = await apiClient.generateImage(request);
+      const response = await apiClient.generateImage(request, (status) => {
+        setQueueStatus(status);
+      });
       if (response.success && response.image_url) {
         setGeneratedImage(response.image_url);
         setSeed(response.seed || null);
+        setQueueStatus("");
       } else {
         setError(response.error || "Failed to generate image");
       }
@@ -117,6 +122,7 @@ export default function Home() {
       setError(err instanceof Error ? err.message : "An error occurred");
     } finally {
       setIsLoading(false);
+      setQueueStatus("");
     }
   };
 
@@ -242,7 +248,14 @@ export default function Home() {
               <div className="gradient-border p-1">
                 <div className="bg-card rounded-lg overflow-hidden aspect-square flex items-center justify-center">
                   {isLoading ? (
-                    <LoadingState />
+                    <div className="text-center p-6">
+                      <LoadingState />
+                      {queueStatus && (
+                        <p className="mt-4 text-sm text-muted-foreground animate-pulse">
+                          {queueStatus}
+                        </p>
+                      )}
+                    </div>
                   ) : error ? (
                     <div className="text-center p-6">
                       <div className="h-12 w-12 rounded-full bg-destructive/10 flex items-center justify-center mx-auto mb-3">
@@ -389,7 +402,7 @@ export default function Home() {
                   {isLoading ? (
                     <>
                       <RefreshCw className="h-4 w-4 animate-spin" />
-                      Generating...
+                      {queueStatus || "Generating..."}
                     </>
                   ) : (
                     <>
