@@ -39,9 +39,8 @@ const DEFAULT_STYLES = [
 ];
 
 const DEFAULT_MODELS = [
-  { id: "sana", name: "Sana", desc: "High quality realistic" },
-  { id: "zimage", name: "Zimage", desc: "Alternative model" },
-  { id: "turbo", name: "Turbo", desc: "Fast generation" },
+  { id: "flux", name: "Flux", desc: "Fast high-quality generation" },
+  { id: "zimage", name: "Zimage", desc: "Fast with 2x upscaling" },
 ];
 
 const INSPIRATIONS = [
@@ -62,7 +61,7 @@ export default function Home() {
   const [error, setError] = useState<string | null>(null);
   const [style, setStyle] = useState("realistic");
   const [resolution, setResolution] = useState("1024x1024");
-  const [model, setModel] = useState("sana");
+  const [model, setModel] = useState("flux");
   const [showSettings, setShowSettings] = useState(false);
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [styles, setStyles] = useState(DEFAULT_STYLES);

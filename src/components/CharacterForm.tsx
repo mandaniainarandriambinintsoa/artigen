@@ -38,9 +38,8 @@ const DEFAULT_STYLES = [
 ];
 
 const DEFAULT_MODELS: Record<string, string> = {
-  "flux-realism": "Hyper-realistic (Recommended)",
-  "flux": "High quality general",
-  "turbo": "Fast generation",
+  "flux": "Fast high-quality generation (recommended)",
+  "zimage": "Fast with 2x upscaling",
 };
 
 interface CharacterFormProps {
@@ -54,7 +53,7 @@ export function CharacterForm({ onGenerate, isLoading }: CharacterFormProps) {
   const [resolution, setResolution] = useState("768x768");
   const [negativePrompt, setNegativePrompt] = useState("cartoon, anime, illustration, drawing, art, painting, sketch, cgi, 3d, render, fake, artificial");
   const [styles, setStyles] = useState<string[]>(DEFAULT_STYLES);
-  const [model, setModel] = useState("flux-realism");
+  const [model, setModel] = useState("flux");
   const [models, setModels] = useState<Record<string, string>>(DEFAULT_MODELS);
 
   useEffect(() => {
