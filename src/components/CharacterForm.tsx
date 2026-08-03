@@ -38,8 +38,11 @@ const DEFAULT_STYLES = [
 ];
 
 const DEFAULT_MODELS: Record<string, string> = {
-  "flux": "Fast high-quality generation (recommended)",
-  "zimage": "Fast with 2x upscaling",
+  "seedream-pro": "Best photorealism for scenes and portraits (premium)",
+  "seedream": "Photorealistic with strong prompt adherence (premium)",
+  "klein": "Fast generation and editing up to 2.4 MP",
+  "zimage": "Fast, budget-friendly, crisp output",
+  "flux": "Fast generation at low cost",
 };
 
 interface CharacterFormProps {
@@ -53,7 +56,7 @@ export function CharacterForm({ onGenerate, isLoading }: CharacterFormProps) {
   const [resolution, setResolution] = useState("768x768");
   const [negativePrompt, setNegativePrompt] = useState("cartoon, anime, illustration, drawing, art, painting, sketch, cgi, 3d, render, fake, artificial");
   const [styles, setStyles] = useState<string[]>(DEFAULT_STYLES);
-  const [model, setModel] = useState("flux");
+  const [model, setModel] = useState("seedream-pro");
   const [models, setModels] = useState<Record<string, string>>(DEFAULT_MODELS);
 
   useEffect(() => {
