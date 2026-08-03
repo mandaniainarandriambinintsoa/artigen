@@ -106,7 +106,7 @@ export default function Home() {
         style,
         resolution,
         model,
-        enhance: true,
+        enhance: false,
       };
       const response = await apiClient.generateImage(request, (status) => {
         setQueueStatus(status);

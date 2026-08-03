@@ -90,7 +90,7 @@ export function CharacterForm({ onGenerate, isLoading }: CharacterFormProps) {
       resolution,
       model,
       negative_prompt: negativePrompt.trim() || undefined,
-      enhance: true,
+      enhance: false,
     });
   };
 
