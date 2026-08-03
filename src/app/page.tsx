@@ -39,9 +39,7 @@ const DEFAULT_STYLES = [
 ];
 
 const DEFAULT_MODELS = [
-  { id: "seedream-pro", name: "Seedream 4.5 Pro", desc: "Best photorealism for scenes and portraits (premium)" },
-  { id: "seedream", name: "Seedream 4.0", desc: "Photorealistic with strong prompt adherence (premium)" },
-  { id: "klein", name: "FLUX.2 Klein", desc: "Fast generation and editing up to 2.4 MP" },
+  { id: "klein", name: "FLUX.2 Klein", desc: "Best available quality without premium credits" },
   { id: "zimage", name: "Z-Image Turbo", desc: "Fast, budget-friendly, crisp output" },
   { id: "flux", name: "Flux Schnell", desc: "Fast generation at low cost" },
 ];
@@ -64,7 +62,7 @@ export default function Home() {
   const [error, setError] = useState<string | null>(null);
   const [style, setStyle] = useState("realistic");
   const [resolution, setResolution] = useState("1024x1024");
-  const [model, setModel] = useState("seedream-pro");
+  const [model, setModel] = useState("klein");
   const [showSettings, setShowSettings] = useState(false);
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [styles, setStyles] = useState(DEFAULT_STYLES);
